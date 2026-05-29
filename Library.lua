@@ -3002,7 +3002,7 @@ function Library:CreateWindow(...)
         Size = UDim2.new(0, 0, 0, 25),
         Text = Config.Game or '';
         TextXAlignment = Enum.TextXAlignment.Right,
-        TextColor3 = Color3.fromRGB(255, 0, 0), -- -- [CHANGE 3] Set text color to red
+        TextColor3 = Config.GameColor, -- -- [CHANGE 3] Set text color to red
         ZIndex = 1;
         Parent = Inner;
     });
