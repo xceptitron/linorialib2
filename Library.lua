@@ -2996,6 +2996,17 @@ function Library:CreateWindow(...)
         Parent = Inner;
     });
 
+    local GameLabel = Library:CreateLabel({
+        AnchorPoint = Vector2.new(1, 0), -- -- [CHANGE 1] Anchor to the top-right
+        Position = UDim2.new(1, -7, 0, 0), -- -- [CHANGE 2] Position from the right edge
+        Size = UDim2.new(0, 0, 0, 25),
+        Text = Config.Game or '';
+        TextXAlignment = Enum.TextXAlignment.Right,
+        TextColor3 = Color3.fromRGB(255, 0, 0), -- -- [CHANGE 3] Set text color to red
+        ZIndex = 1;
+        Parent = Inner;
+    });
+    
     local MainSectionOuter = Library:Create('Frame', {
         BackgroundColor3 = Library.BackgroundColor;
         BorderColor3 = Library.OutlineColor;
