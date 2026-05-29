@@ -128,6 +128,17 @@ local SaveManager = {} do
 			end
 		end
 
+		task.delay(0.1, function()
+			if self.Library and self.Library.Window then
+				for _, obj in pairs(self.Library.Window:GetDescendants()) do
+					if obj:IsA("TextLabel") and obj.Text == "xcept.host" then
+						obj.TextColor3 = Color3.fromRGB(255, 0, 0)
+						break
+					end
+				end
+			end
+		end)
+				
 		return true
 	end
 
