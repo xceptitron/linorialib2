@@ -131,6 +131,40 @@ local SaveManager = {} do
 		return true
 	end
 
+	function SaveManager:Delete(name)
+		if (not name) then
+			return false, 'no config file is selected'
+		end
+		
+		local file = self.Folder .. '/settings/' .. name .. '.json'
+		if not isfile(file) then return false, 'config does not exist' end
+	
+		delfile(file)
+		return true
+	end
+	
+	function SaveManager:Rename(oldName, newName)
+		if (not oldName) then
+			return false, 'no config file is selected'
+		end
+		
+		if (not newName) or newName:gsub(' ', '') == '' then
+			return false, 'invalid new config name'
+		end
+	
+		local oldFile = self.Folder .. '/settings/' .. oldName .. '.json'
+		local newFile = self.Folder .. '/settings/' .. newName .. '.json'
+		
+		if not isfile(oldFile) then return false, 'source config does not exist' end
+		if isfile(newFile) then return false, 'config with new name already exists' end
+	
+		local content = readfile(oldFile)
+		writefile(newFile, content)
+		delfile(oldFile)
+		
+		return true
+	end
+
 	function SaveManager:IgnoreThemeSettings()
 		self:SetIgnoreIndexes({ 
 			"BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor", -- themes
@@ -256,6 +290,44 @@ local SaveManager = {} do
 			writefile(self.Folder .. '/settings/autoload.txt', name)
 			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
 			self.Library:Notify(string.format('Set %q to auto load', name))
+		end)
+
+		section:AddButton('Rename config', function()
+			local oldName = Options.SaveManager_ConfigList.Value
+			local newName = Options.SaveManager_ConfigName.Value
+		
+			if not oldName then
+				return self.Library:Notify('No config selected to rename', 2)
+			end
+		
+			local success, err = self:Rename(oldName, newName)
+			if not success then
+				return self.Library:Notify('Failed to rename config: ' .. err)
+			end
+		
+			self.Library:Notify(string.format('Renamed config %q to %q', oldName, newName))
+		
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
+			Options.SaveManager_ConfigName:SetValue('')
+		end)
+		
+		section:AddButton('Delete config', function()
+			local name = Options.SaveManager_ConfigList.Value
+		
+			if not name then
+				return self.Library:Notify('No config selected to delete', 2)
+			end
+		
+			local success, err = self:Delete(name)
+			if not success then
+				return self.Library:Notify('Failed to delete config: ' .. err)
+			end
+		
+			self.Library:Notify(string.format('Deleted config %q', name))
+		
+			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
 		SaveManager.AutoloadLabel = section:AddLabel('Current autoload config: none', true)
