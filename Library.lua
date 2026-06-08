@@ -3003,7 +3003,7 @@ function Library:CreateWindow(...)
         AnchorPoint = Vector2.new(1, 0), -- -- [CHANGE 1] Anchor to the top-right
         Position = UDim2.new(1, -7, 0, 0), -- -- [CHANGE 2] Position from the right edge
         Size = UDim2.new(0, 0, 0, 25),
-        Text = Config.Game or '';
+        Text = Config.GameName or '';
         TextXAlignment = Enum.TextXAlignment.Right,
         TextColor3 = Config.GameColor, -- -- [CHANGE 3] Set text color to red
         ZIndex = 1;
